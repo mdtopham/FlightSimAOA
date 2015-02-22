@@ -14,8 +14,17 @@ void setup() {
 
   //Serial.begin(57600);
   initializeWS2803();
-  
-  // Initialize LEDs in sequence to verify LED activity
+  testLEDs(); // Service Test - Sequence RED, GREEN, BLUE. 
+  initializeAOA(0,1,2);
+}
+
+// loop runs repetitively, as long as power is on
+void loop() {
+ FlightSim.update(); // causes X-Plane's changes to be received
+}
+
+void testLEDs() {
+    // Initialize LEDs in sequence to verify LED activity
   for(int i=0;i<6;i++) {
     setLedColor(i,RED);
   }
@@ -36,13 +45,8 @@ void setup() {
   }
   updateWS2803();
   delay(250);  
-}
 
-// loop runs repetitively, as long as power is on
-void loop() {
- FlightSim.update(); // causes X-Plane's changes to be received
 }
-
 
 
 

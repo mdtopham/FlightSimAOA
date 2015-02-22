@@ -9,21 +9,22 @@
 
 #define BRIGHTNESS 128
 
-FlightSimFloat alpha;
+FlightSimFloat   alpha;
 FlightSimInteger onGround;
-FlightSimInteger stall;
-FlightSimFloat acf_stall_warn_alpha;
+FlightSimInteger acf_stall_warn_alpha;
+unsigned int led[3];
 
+void initializeAOA(unsigned int led_1, unsigned int led_2, unsigned int led_3) {
+  led[0] = led_1;
+  led[1] = led_2;
+  led[2] = led_3;
 
-void initializeAOA() {
   clearAOA();
 
   alpha = XPlaneRef("sim/flightmodel/position/alpha");
   alpha.onChange(updateAlpha);
   onGround = XPlaneRef("sim/flightmodel/failures/onground_any");
-  stall = XPlaneRef("sim/flightmodel/failures/stallwarning");
   acf_stall_warn_alpha = XPlaneRef("sim/aircraft/overflow/acf_stall_warn_alpha");
-
 }
 
 void updateAlpha(float a) {
@@ -37,42 +38,42 @@ void updateAlpha(float a) {
   percent_alpha = (a / max_alpha);
   if (!onGround) {
     if (percent_alpha > 0.9) {
-      setLedColor(3, RED);
-      setLedColor(4, RED);
-      setLedColor(5, RED);
+      setLedColor(led[0], RED);
+      setLedColor(led[1], RED);
+      setLedColor(led[2], RED);
     } else if (percent_alpha > 0.85) {
-      setLedColor(3, RED);
-      setLedColor(4, RED);
-      setLedColor(5, YELLOW);
+      setLedColor(led[0], RED);
+      setLedColor(led[1], RED);
+      setLedColor(led[2], YELLOW);
     } else if (percent_alpha > 0.8) {
-      setLedColor(3, RED);
-      setLedColor(4, YELLOW);
-      setLedColor(5, YELLOW);
+      setLedColor(led[0], RED);
+      setLedColor(led[1], YELLOW);
+      setLedColor(led[2], YELLOW);
     } else if (percent_alpha > 0.7) {
-      setLedColor(3, YELLOW);
-      setLedColor(4, YELLOW);
-      setLedColor(5, YELLOW);
+      setLedColor(led[0], YELLOW);
+      setLedColor(led[1], YELLOW);
+      setLedColor(led[2], YELLOW);
     } else if (percent_alpha > 0.65) {
-      setLedColor(3, YELLOW);
-      setLedColor(4, YELLOW);
-      setLedColor(5, GREEN);
+      setLedColor(led[0], YELLOW);
+      setLedColor(led[1], YELLOW);
+      setLedColor(led[2], GREEN);
     } else if (percent_alpha > 0.6) {
-      setLedColor(3, YELLOW);
-      setLedColor(4, GREEN);
-      setLedColor(5, GREEN);
+      setLedColor(led[0], YELLOW);
+      setLedColor(led[1], GREEN);
+      setLedColor(led[2], GREEN);
     } else if (percent_alpha > -0.6) {
-      setLedColor(3, GREEN);
-      setLedColor(4, GREEN);
-      setLedColor(5, GREEN);
+      setLedColor(led[0], GREEN);
+      setLedColor(led[1], GREEN);
+      setLedColor(led[2], GREEN);
     } else {
-      setLedColor(3, RED);
-      setLedColor(4, RED);
-      setLedColor(5, RED);
+      setLedColor(led[0], RED);
+      setLedColor(led[1], RED);
+      setLedColor(led[2], RED);
     }
   } else {
-      setLedBar(3, 0x00,0x00,0x00);
-      setLedBar(4, 0x00,0x00,0x00);
-      setLedBar(5, 0x00,0x00,0x00);
+      setLedColor(led[0], OFF);
+      setLedColor(led[1], OFF);
+      setLedColor(led[2], OFF);
 
   }
   updateWS2803();
@@ -80,7 +81,10 @@ void updateAlpha(float a) {
 }
 
 void clearAOA() {
-  clearWS2803();
+      setLedColor(led[0], OFF);
+      setLedColor(led[1], OFF);
+      setLedColor(led[2], OFF);
+      updateWS2803();
 }
 
 
